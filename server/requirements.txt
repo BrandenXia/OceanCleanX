@@ -1,0 +1,2 @@
+websockets
+smbus2

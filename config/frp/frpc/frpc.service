@@ -1,0 +1,12 @@
+[Unit]
+Description = frpc
+After = network.target
+
+[Service]
+Type = idle
+Restart = on-failure
+RestartSec = 60s
+ExecStart = __INSTALL_DIR__/frpc -c __INSTALL_DIR__/frpc.toml
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description = frps
+After = network.target syslog.target
+Wants = network.target
+
+[Service]
+Type = simple
+ExecStart = __INSTALL_DIR__/frps -c __INSTALL_DIR__/frps.toml
+
+[Install]
+WantedBy = multi-user.target

@@ -1,0 +1,13 @@
+serverAddr = "__SERVER_IP__"
+serverPort = 7000
+
+[auth]
+method = "token"
+token = "__FRP_TOKEN__"
+
+[[proxies]]
+name = "ssh"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6000
