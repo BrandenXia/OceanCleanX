@@ -1,4 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import { round } from "@/utils.ts";
+
+type SetFunc<T> = (_: T) => T;
+
+const PRECISION = 3;
 
 const RESET_FACTOR = 0.8;
 const RESET_INTERVAL = 50;
@@ -25,8 +30,14 @@ const inc_positive = (prev: number) => _inc(prev, INC_SPEED);
 const inc_negative = (prev: number) => _inc(prev, -INC_SPEED);
 
 const useControl = () => {
-  const [speed, setSpeed] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [speed, _setSpeed] = useState(0);
+  const [direction, _setDirection] = useState(0);
+  const setSpeed = useCallback((func: SetFunc<number>) => {
+    _setSpeed((prev) => round(func(prev), PRECISION));
+  }, []);
+  const setDirection = useCallback((func: SetFunc<number>) => {
+    _setDirection((prev) => round(func(prev), PRECISION));
+  }, []);
 
   const [keys, _setKeys] = useState(() => new Set<string>());
   const setKeys = (func: (_: string) => void, val: string) =>
@@ -58,7 +69,7 @@ const useControl = () => {
     if (keys.has("ArrowRight") || keys.has("d")) setDirection(inc_positive);
 
     startReset();
-  }, [keys, startReset]);
+  }, [keys, setDirection, setSpeed, startReset]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -84,7 +95,7 @@ const useControl = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [handleKeyDown, handleKeyUp]);
+  }, [handleKeyDown, handleKeyUp, id]);
 
   return { speed, direction };
 };

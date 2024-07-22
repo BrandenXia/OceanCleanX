@@ -1,13 +1,10 @@
 import { useEffect, useRef } from "react";
-import { round, throttle } from "@/utils.ts";
+import { throttle } from "@/utils.ts";
 
-const PRECISION = 3;
 const UPDATE_INTERVAL = 100;
 
-const _remote = (ws: WebSocket, speed_: number, direction_: number) => {
+const _remote = (ws: WebSocket, speed: number, direction: number) => {
   if (ws.readyState === WebSocket.OPEN) {
-    const speed = round(speed_, PRECISION);
-    const direction = round(direction_, PRECISION);
     ws.send(JSON.stringify({ speed, direction }));
   }
 };
@@ -18,16 +15,16 @@ const useRemote = (speed: number, direction: number) => {
   const remote = useRef(throttle(_remote, UPDATE_INTERVAL));
 
   useEffect(() => {
-    ws.current = new WebSocket(`ws://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`);
+    ws.current = new WebSocket(
+      `ws://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`,
+    );
 
     const wsCurrent = ws.current;
 
     wsCurrent.onopen = () => console.log("Remote control server connected");
     wsCurrent.onclose = () => console.log("Remote control server disconnected");
 
-    return () => {
-      wsCurrent.close();
-    };
+    return () => wsCurrent.close();
   }, []);
 
   useEffect(() => {
