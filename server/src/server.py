@@ -5,7 +5,6 @@ import logging
 import websockets
 
 from control import Control
-from motor import MotorControl
 
 logger = logging.getLogger(__name__)
 
@@ -42,19 +41,32 @@ async def handler(websocket, control: Control):
         await websocket.send("ok")
 
 
-async def main():
+async def _main():
+    try:
+        from motor import MotorControl
+    except ImportError:
+        from control import Control as MotorControl
+
+        logger.warning("Motor module not found, using dummy control")
+    control = Control()
+
     addr = ("0.0.0.0", 9876)
+    async with websockets.serve(lambda ws, path: handler(ws, control), *addr):
+        logger.info("Server started, ctrl-c to stop")
+        await asyncio.Future()
+
+
+def main():
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=logging.INFO
     )
 
-    logger.info("Server started, ctrl-c to stop")
-    control = MotorControl()
-
-    async with websockets.serve(lambda ws, path: handler(ws, control), *addr):
-        await asyncio.Future()
+    try:
+        asyncio.run(_main())
+    except KeyboardInterrupt:
+        logger.info("Server stopped")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
