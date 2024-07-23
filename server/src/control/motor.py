@@ -1,5 +1,5 @@
-from control import Control
-from pca9685 import PCA9685
+from .control import Control
+from .pca9685 import PCA9685
 
 
 class MotorControl(Control):

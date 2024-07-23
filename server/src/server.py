@@ -5,58 +5,69 @@ import logging
 
 import websockets
 
-from control import Control
-
 logger = logging.getLogger(__name__)
 
-lock = asyncio.Lock()
-executor = concurrent.futures.ThreadPoolExecutor()
+
+def check_data_validity(data: dict) -> bool:
+    if not isinstance(data, dict) or "type" not in data:
+        logger.warning(f"Invalid data: {data}")
+        return False
+
+    return True
 
 
-def with_lock(func):
-    async def wrapper(*args, **kwargs):
-        global lock
-
-        await lock.acquire()
-        res = await func(*args, **kwargs)
-        lock.release()
-        return res
-
-    return wrapper
-
-
-@with_lock
-async def handler(websocket, control: Control):
-    async for message in websocket:
+class Server:
+    def __init__(self):
         try:
-            data = json.loads(message)
-        except json.JSONDecodeError as e:
-            logger.error(f"Error decoding JSON: {e}")
-            await websocket.send("error: invalid JSON")
-            continue
+            from control.motor import MotorControl
+        except ImportError:
+            from control import Control as MotorControl
 
-        if not isinstance(data, dict) or "direction" not in data or "speed" not in data:
-            await websocket.send("error: missing direction or speed")
-            continue
+            logger.warning("Motor module not found, using dummy control")
 
-        logger.debug(f"Received data: {data}")
+        self.lock = asyncio.Lock()
+        self.executor = concurrent.futures.ThreadPoolExecutor()
 
-        executor.submit(control.set_speed, data["direction"], data["speed"])
+        self.control = MotorControl()
 
-        await websocket.send("ok")
+    def data_action(self, data: dict):
+        match data["type"]:
+            case "control":
+                return self.control.set_speed, data["direction"], data["speed"]
+            case _:
+                raise ValueError(f"Invalid data type: {data['type']}")
+
+    async def handler(self, websocket: websockets.WebSocketServerProtocol):
+        await self.lock.acquire()
+
+        async for message in websocket:
+            try:
+                data = json.loads(message)
+            except (json.JSONDecodeError, ValueError) as e:
+                logger.error(f"Error decoding JSON: {e}")
+                await websocket.send("error: Invalid JSON")
+                continue
+
+            if not check_data_validity(data):
+                await websocket.send("error: Invalid data")
+                continue
+
+            logger.debug(f"Received data: {data}")
+
+            try:
+                self.executor.submit(*self.data_action(data))
+            except ValueError as e:
+                await websocket.send("error: Invalid data")
+                continue
+
+        self.lock.release()
 
 
 async def _main():
-    try:
-        from motor import MotorControl
-    except ImportError:
-        from control import Control as MotorControl
-
-        logger.warning("Motor module not found, using dummy control")
-    control = Control()
-
+    server = Server()
     addr = ("0.0.0.0", 9876)
-    async with websockets.serve(lambda ws, path: handler(ws, control), *addr):
+
+    async with websockets.serve(server.handler, *addr):
         logger.info("Server started, ctrl-c to stop")
         await asyncio.Future()
 
