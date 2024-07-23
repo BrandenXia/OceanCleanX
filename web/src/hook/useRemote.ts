@@ -5,7 +5,7 @@ const UPDATE_INTERVAL = 100;
 
 const _remote = (ws: WebSocket, speed: number, direction: number) => {
   if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ speed, direction }));
+    ws.send(JSON.stringify({ type: "control", speed, direction }));
   }
 };
 
