@@ -13,7 +13,7 @@ const MAX = 1;
 const MIN = -1;
 
 const reset = (prev: number) => {
-  if (Math.abs(prev) < 0.01) return 0;
+  if (Math.abs(prev) < Math.pow(1 / 10, PRECISION - 1)) return 0;
   return prev * RESET_FACTOR;
 };
 
