@@ -1,4 +1,5 @@
 import asyncio
+import concurrent.futures
 import json
 import logging
 
@@ -9,6 +10,7 @@ from control import Control
 logger = logging.getLogger(__name__)
 
 lock = asyncio.Lock()
+executor = concurrent.futures.ThreadPoolExecutor()
 
 
 def with_lock(func):
@@ -37,7 +39,10 @@ async def handler(websocket, control: Control):
             await websocket.send("error: missing direction or speed")
             continue
 
-        control.set_speed(data["direction"], data["speed"])
+        logger.debug(f"Received data: {data}")
+
+        executor.submit(control.set_speed, data["direction"], data["speed"])
+
         await websocket.send("ok")
 
 
