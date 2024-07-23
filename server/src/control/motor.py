@@ -32,9 +32,6 @@ class MotorControl(Control):
         """
         super().set_speed(direction, speed)
 
-        if not -1 <= direction <= 1 or not -1 <= speed <= 1:
-            return
-
         direction_factor = self.__RANGE * direction / 2 * 0.9
         speed_factor = self.__RANGE * speed / 2
 
