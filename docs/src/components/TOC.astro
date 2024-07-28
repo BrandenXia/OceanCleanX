@@ -1,0 +1,61 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+---
+
+<div class="pl-5 pt-10" data-headings={headings}>
+  <span class="text-lg font-medium">On this page</span>
+  <ul class="ml-1.5 mt-2 space-y-1 text-sm">
+    {
+      headings.map((heading) => (
+        <li>
+          <a
+            href={`#${heading.slug}`}
+            class="relative text-zinc-500 hover:text-zinc-600"
+            style={`left: ${heading.depth - 1}rem`}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script define:vars={{ headings }} is:inline>
+  const setActiveLink = (links, scrollPos) => {
+    links
+      .filter((link) => link.offsetTop <= scrollPos)
+      .forEach((link) => {
+        links.forEach((l) => l.classList.remove("active"));
+        link.classList.add("active");
+      });
+  };
+
+  let scrollPos = 0;
+  let ticking = false;
+
+  const links = headings.map((heading) =>
+    document.querySelector(`a[href="#${heading.slug}"]`),
+  );
+
+  document.addEventListener("scroll", () => {
+    scrollPos = window.scrollY;
+
+    if (!ticking)
+      window.requestAnimationFrame(() => {
+        setActiveLink(links, scrollPos);
+
+        ticking = false;
+      }) && (ticking = true);
+  });
+</script>
+
+<style>
+  .active {
+    @apply text-blue-500;
+  }
+</style>

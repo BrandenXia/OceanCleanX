@@ -1,0 +1,59 @@
+---
+import type { SidebarTreeNode } from "@/utils/sidebar-tree";
+import urlEqual from "@/utils/url";
+
+interface Props {
+  name?: string;
+  tree: SidebarTreeNode;
+}
+
+const { name, tree } = Astro.props;
+
+const Wrapper = name ? "details" : "div";
+---
+
+<Wrapper open={true}>
+  {
+    name && (
+      <summary class="flex items-center justify-between pr-1">
+        <span class="text-lg">{name}</span>
+        <span class="i-ph-caret-down-bold mt-0.5 h-3.5 w-3.5 transition-transform" />
+      </summary>
+    )
+  }
+  <ul class:list={["space-y-2", { "border-l border-slate-100": name }]}>
+    {
+      tree.entries.map((entry) => (
+        <li
+          class:list={[
+            { "-ml-px border-l pl-3.5": name },
+            urlEqual(Astro.url.pathname, `/docs/${entry.url}`)
+              ? "border-blue-500 text-blue-500"
+              : "border-transparent text-slate-500 hover:border-slate-400 hover:text-slate-900",
+          ]}
+        >
+          <a class="block h-full w-full" href={`/docs/${entry.url}`}>
+            {entry.title}
+          </a>
+        </li>
+      ))
+    }
+    {
+      Object.entries(tree.children).map(([key, value]) => (
+        <li class:list={{ "pl-4": name }}>
+          <Astro.self name={key} tree={value} />
+        </li>
+      ))
+    }
+  </ul>
+</Wrapper>
+
+<style>
+  details[open] summary {
+    @apply mb-3;
+  }
+
+  details:not([open]) summary > .i-ph-caret-down-bold {
+    @apply -rotate-90;
+  }
+</style>

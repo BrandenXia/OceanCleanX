@@ -1,0 +1,35 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Sidebar from "@/components/Sidebar/Sidebar.astro";
+import TOC from "@/components/TOC.astro";
+
+interface Props {
+  title: string;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { title, headings } = Astro.props;
+---
+
+<BaseLayout title={`${title} - ClearBot Docs`}>
+  <div class="sticky top-0">
+    <Header />
+  </div>
+  <aside
+    class="fixed inset-0 left-0 top-[var(--header-height)] hidden overflow-y-auto overscroll-contain shadow md:block md:w-56 lg:w-72"
+  >
+    <Sidebar />
+  </aside>
+  <main
+    data-pagefind-body
+    class="px-10 py-10 md:ml-56 md:pl-16 lg:ml-72 lg:pl-20 xl:mr-64 xl:pl-24"
+  >
+    <slot />
+  </main>
+  <aside
+    class="fixed right-0 top-[var(--header-height)] -z-10 hidden overflow-y-auto overscroll-contain xl:block xl:w-64"
+  >
+    <TOC headings={headings} />
+  </aside>
+</BaseLayout>

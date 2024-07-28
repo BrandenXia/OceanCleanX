@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import buildSidebarTree from "@/utils/sidebar-tree";
+import SubList from "./SubList.astro";
+
+const entries = (await getCollection("docs")).map((doc) => ({
+  title: doc.data.title,
+  url: doc.slug,
+  position: doc.slug.split("/").slice(0, -1),
+}));
+const tree = buildSidebarTree(entries);
+---
+
+<div class="select-none px-4 pt-4 md:px-6 md:py-6 lg:px-9 lg:py-7">
+  <SubList tree={tree} />
+</div>

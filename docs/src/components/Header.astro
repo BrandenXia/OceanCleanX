@@ -1,0 +1,35 @@
+---
+import MobileSidebar from "./Sidebar/MobileSidebar.astro";
+import Search from "./Search.tsx";
+---
+
+<header
+  id="header"
+  class="flex items-center justify-between bg-slate-50 px-5 py-3 shadow md:px-8"
+>
+  <div class="flex items-center space-x-4 md:space-x-0">
+    <div class="block md:hidden">
+      <MobileSidebar />
+    </div>
+    <span class="font-serif text-2xl text-gray-800">ClearBot</span>
+  </div>
+  <div class="flex items-center space-x-4">
+    <div class="hidden sm:block">
+      <Search client:only="react" />
+    </div>
+    <button
+      aria-label="GitHub"
+      role="link"
+      class="rounded-2xl p-2 transition-colors hover:bg-gray-100"
+    >
+      <a aria-label="GitHub" href={import.meta.env.GITHUB_URL} target="_blank">
+        <span class="i-ph-github-logo block h-7 w-7"></span>
+      </a>
+    </button>
+  </div>
+</header>
+
+<script>
+  const headerHeight = document.querySelector("#header")?.clientHeight ?? 0;
+  document.body.style.setProperty("--header-height", `${headerHeight}px`);
+</script>
