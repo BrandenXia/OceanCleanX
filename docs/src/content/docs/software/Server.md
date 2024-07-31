@@ -21,3 +21,4 @@ A sample data packet is shown below:
 Each data packet has a `type` field, which can be the following:
 
 - `control`: Control the catamaran, with the `direction` and `speed` fields
+  - `direction` and `speed` are both floating point numbers between -1 and 1
