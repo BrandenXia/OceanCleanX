@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 FILE_DIR=$(dirname "$0")
 
 # check for root
