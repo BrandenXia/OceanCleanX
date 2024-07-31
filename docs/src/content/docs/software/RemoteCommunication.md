@@ -46,7 +46,7 @@ $ sudo ./frpc.sh
 
 The scripts are organized as follows:
 
-```shell
+```console
 $ tree config/frp
 config/frp
 ├── frpc
