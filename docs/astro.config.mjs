@@ -9,7 +9,7 @@ import vercel from "@astrojs/vercel/serverless";
 export default defineConfig({
   site: "https://oceancleanx.org",
   integrations: [tailwind(), react(), sitemap()],
-  output: "server",
+  output: "hybrid",
   adapter: vercel({
     webAnalytics: { enable: true },
   }),
