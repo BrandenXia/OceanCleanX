@@ -1,6 +1,7 @@
 ---
 import type { SidebarTreeNode } from "@/utils/sidebar-tree";
 import urlEqual from "@/utils/url";
+import { toTitleCase } from "../../utils/text";
 
 interface Props {
   name?: string;
@@ -16,7 +17,7 @@ const Wrapper = name ? "details" : "div";
   {
     name && (
       <summary class="flex items-center justify-between pr-1">
-        <span class="text-lg">{name}</span>
+        <span class="text-lg">{toTitleCase(name)}</span>
         <span class="i-ph-caret-down-bold mt-0.5 h-3.5 w-3.5 transition-transform" />
       </summary>
     )
