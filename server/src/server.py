@@ -31,11 +31,10 @@ class Server:
         self.control = MotorControl()
 
     def data_action(self, data: dict):
-        match data["type"]:
-            case "control":
-                return self.control.set_speed, data["direction"], data["speed"]
-            case _:
-                raise ValueError(f"Invalid data type: {data['type']}")
+        if data["type"] == "control":
+            return self.control.set_speed, data["direction"], data["speed"]
+        else:
+            raise ValueError(f"Invalid data type: {data['type']}")
 
     async def handler(self, websocket: websockets.WebSocketServerProtocol):
         await self.lock.acquire()
