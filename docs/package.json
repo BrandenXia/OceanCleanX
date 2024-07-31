@@ -20,8 +20,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "rm -rf dist",
-    "postbuild": "pagefind --site dist",
+    "prebuild": "rm -rf .vercel/output",
+    "postbuild": "pagefind --site .vercel/output",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
