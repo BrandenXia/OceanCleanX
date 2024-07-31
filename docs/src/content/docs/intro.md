@@ -2,38 +2,10 @@
 title: Introduction
 ---
 
-# Hi there!
+# Introduction
 
-## Introduction
+Welcome to the Ocean Clean X documentation!
 
-Welcome to the documentation section of the website.
-Here you will find all the information you need to get started with our products.
+Ocean Clean X is an open-source project that aims to clean up the ocean through autonomous catamarans. All the information about this project can be found on [GitHub](https://github.com/BrandenXia/OceanCleanX).
 
-> To be thus is nothing; but to be safely thus. Our fears in Banquo stick deep; and in his royalty of nature reigns that which would be feared.
-
-```typescript
-const a = 1;
-console.log(a);
-```
-
-## Getting Started
-
-### Installation
-
-To install the package, run the following command:
-
-```bash
-npm install my-package
-```
-
-### Usage
-
-To use the package, import it as follows:
-
-```typescript
-import { myFunction } from "my-package";
-```
-
-## Conclusion
-
-That's it! You are now ready to use our products. If you have any questions, feel free to contact us.
+This documentation is intended to provide a comprehensive guide to the project, including the design, implementation, and testing of the autonomous catamarans. It is intended to provide details about both software and hardware components of the project, as well as how we combine them to create a fully functional system. 
