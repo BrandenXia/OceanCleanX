@@ -16,7 +16,7 @@ const useRemote = (speed: number, direction: number) => {
 
   useEffect(() => {
     ws.current = new WebSocket(
-      `ws://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`,
+      `wss://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`,
     );
 
     const wsCurrent = ws.current;
