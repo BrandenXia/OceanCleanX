@@ -1,35 +1,23 @@
 import { useEffect, useRef } from "react";
 import { throttle } from "@/utils.ts";
+import useWs from "@/hook/useWs.ts";
+import type { WsState } from "@/context/WsProvider";
 
 const UPDATE_INTERVAL = 100;
 
-const _remote = (ws: WebSocket, speed: number, direction: number) => {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ type: "control", speed, direction }));
-  }
+const _remote = (ws: WsState, speed: number, direction: number) => {
+  if (ws.ready) ws.send({ type: "control", speed, direction });
 };
 
 const useRemote = (speed: number, direction: number) => {
-  const ws = useRef<WebSocket | null>(null);
+  const wsState = useWs();
 
   const remote = useRef(throttle(_remote, UPDATE_INTERVAL));
 
-  useEffect(() => {
-    ws.current = new WebSocket(
-      `wss://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`,
-    );
-
-    const wsCurrent = ws.current;
-
-    wsCurrent.onopen = () => console.log("Remote control server connected");
-    wsCurrent.onclose = () => console.log("Remote control server disconnected");
-
-    return () => wsCurrent.close();
-  }, []);
-
-  useEffect(() => {
-    if (ws.current) remote.current(ws.current, speed, direction);
-  }, [speed, direction]);
+  useEffect(
+    () => remote.current(wsState, speed, direction),
+    [speed, direction, wsState],
+  );
 };
 
 export default useRemote;
