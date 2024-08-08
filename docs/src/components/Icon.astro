@@ -1,0 +1,20 @@
+---
+interface Props {
+  name: string;
+  href: string;
+  className: string;
+}
+
+const { name, href, className } = Astro.props;
+---
+
+<button
+  aria-label={name}
+  role="link"
+  title={name}
+  class="rounded-2xl p-2 transition-colors hover:bg-gray-100"
+>
+  <a aria-label={name} {href} target="_blank">
+    <span class={`${className} block h-7 w-7`}></span>
+  </a>
+</button>

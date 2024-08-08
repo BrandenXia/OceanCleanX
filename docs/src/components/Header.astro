@@ -1,6 +1,7 @@
 ---
 import MobileSidebar from "./Sidebar/MobileSidebar.astro";
 import Search from "./Search.tsx";
+import Icon from "./Icon.astro";
 ---
 
 <header
@@ -17,15 +18,25 @@ import Search from "./Search.tsx";
     <div class="hidden sm:block">
       <Search client:only="react" />
     </div>
-    <button
-      aria-label="GitHub"
-      role="link"
-      class="rounded-2xl p-2 transition-colors hover:bg-gray-100"
-    >
-      <a aria-label="GitHub" href={import.meta.env.GITHUB_URL} target="_blank">
-        <span class="i-ph-github-logo block h-7 w-7"></span>
-      </a>
-    </button>
+    <!--<button-->
+    <!--  aria-label="GitHub"-->
+    <!--  role="link"-->
+    <!--  class="rounded-2xl p-2 transition-colors hover:bg-gray-100"-->
+    <!--&gt;-->
+    <!--  <a aria-label="GitHub" href={import.meta.env.GITHUB_URL} target="_blank">-->
+    <!--    <span class="i-ph-github-logo block h-7 w-7"></span>-->
+    <!--  </a>-->
+    <!--</button>-->
+    <Icon
+      name="Control Panel"
+      href={import.meta.env.CONTROL_PANEL_URL}
+      className="i-ph-monitor-arrow-up"
+    />
+    <Icon
+      name="GitHub"
+      href={import.meta.env.GITHUB_URL}
+      className="i-ph-github-logo"
+    />
   </div>
 </header>
 
