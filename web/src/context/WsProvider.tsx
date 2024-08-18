@@ -28,7 +28,7 @@ const WsProvider = ({ children }: { children?: ReactNode }) => {
 
   useEffect(() => {
     const socket = new WebSocket(
-      `ws://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_SERVER_PORT}`,
+      `ws://${import.meta.env.VITE_SERVER_IP}:${import.meta.env.VITE_WS_PORT}`,
     );
 
     socket.onopen = () => setReady(true);

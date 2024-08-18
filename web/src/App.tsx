@@ -1,31 +1,32 @@
-import useControl from "@/hook/useControl.ts";
-import SpeedIndicator from "@/components/SpeedIndicator.tsx";
-import useRemote from "@/hook/useRemote.ts";
-import Panel from "@/components/Panel.tsx";
-import Wheel from "@/components/Wheel.tsx";
+import ControlPanel from "@/components/ControlPanel.tsx";
+import { ReactNode } from "react";
+import LiveCam from "@/components/LiveCam.tsx";
+import DataPanel from "@/components/DataPanel.tsx";
 
-const App = () => {
-  const { speed, direction } = useControl();
-  useRemote(speed, direction);
-
-  return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className="flex gap-x-32">
-        <div className="relative h-72 w-72 flex justify-center items-center">
-          <Panel
-            degree={direction * 90 + 90}
-            innerBorder={5}
-            outerBorder={5}
-            innerColor="border-yellow-300"
-            outerColor="border-blue-300"
-            className="absolute top-0 left-0 h-36 w-72"
-          />
-          <Wheel direction={direction} className="h-48 w-48" />
-        </div>
-        <SpeedIndicator className="h-72 w-14" speed={speed} />
-      </div>
+const App = () => (
+  <div className="w-screen h-screen grid grid-rows-9 grid-cols-2 gap-4 p-4 *:border *:flex *:flex-col">
+    <div className="row-span-4">
+      <Label>Control Panel</Label>
+      <ControlPanel />
     </div>
-  );
-};
+    <div className="row-span-5">
+      <Label>Live Cam</Label>
+      <LiveCam />
+    </div>
+    <div className="row-span-5">
+      <Label>Data Display</Label>
+      <DataPanel />
+    </div>
+    <div className="row-span-4">
+      <Label>Lidar Data</Label>
+    </div>
+  </div>
+);
+
+const Label = ({ children }: { children?: ReactNode }) => (
+  <label className="m-4 mb-3 w-full text-xl font-medium">
+    {children}
+  </label>
+);
 
 export default App;
